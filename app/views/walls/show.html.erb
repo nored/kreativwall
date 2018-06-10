@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @wall.name %>
+</p>
+
+<p>
+  <strong>Slug:</strong>
+  <%= @wall.slug %>
+</p>
+
+<p>
+  <strong>Expiredate:</strong>
+  <%= @wall.expireDate %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @wall.user_id %>
+</p>
+
+<%= link_to 'Edit', edit_wall_path(@wall) %> |
+<%= link_to 'Back', walls_path %>

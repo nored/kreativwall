@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  contend: MyString
+  user_id: 1
+  wall_id: 1
+
+two:
+  contend: MyString
+  user_id: 1
+  wall_id: 1
