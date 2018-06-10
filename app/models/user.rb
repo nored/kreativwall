@@ -1,10 +1,10 @@
 class User < ApplicationRecord
-  has_many :walls
-  has_many :video_posts
-  has_many :text_posts
-  has_many :picture_posts
-  has_many :likes
-  has_many :comments
+  has_many :walls, dependent: :destroy
+  has_many :video_posts, dependent: :destroy
+  has_many :text_posts, dependent: :destroy
+  has_many :picture_posts, dependent: :destroy
+  has_many :likes, dependent: :destroy
+  has_many :comments, dependent: :destroy
   mount_base64_uploader :picture, PictureUploader
 
   # Assign an API key on create
