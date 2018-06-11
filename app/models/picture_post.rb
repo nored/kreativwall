@@ -3,5 +3,5 @@ class PicturePost < ApplicationRecord
   has_many :likes, dependent: :destroy
   belongs_to :user
   belongs_to :wall
-  mount_base64_uploader :picture, PictureUploader
+  mount_base64_uploader :contend, PictureUploader
 end

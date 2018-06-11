@@ -27,6 +27,9 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
+# Theme for Active Admin
+gem 'active_admin_flat_skin'
+
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
@@ -49,6 +52,9 @@ gem 'rack-attack'
 gem 'devise'
 gem 'activeadmin'
 gem 'inherited_resources'
+
+gem "font-awesome-rails"
+
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

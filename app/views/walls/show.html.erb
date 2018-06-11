@@ -1,24 +1,35 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @wall.name %>
-</p>
-
-<p>
-  <strong>Slug:</strong>
-  <%= @wall.slug %>
-</p>
-
-<p>
-  <strong>Expiredate:</strong>
-  <%= @wall.expireDate %>
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @wall.user_id %>
-</p>
-
-<%= link_to 'Edit', edit_wall_path(@wall) %> |
-<%= link_to 'Back', walls_path %>
+<div class="container">
+  <div id="main">
+    <section id="contend">
+      <% @media.each do |media| %>
+        <%if media.instance_of? TextPost %>
+          <div id="pol">
+            <p id="text"><%= media.contend %></p>
+            <p>
+              <span class="glyphicon glyphicon-comment"></span> <%= media.comments.size %>
+              <span class="glyphicon glyphicon-thumbs-up"></span> <%= media.likes.size %>
+            </p>
+          </div>
+        <% end %>
+        <%if media.instance_of? PicturePost %>
+          <div id="pol">
+            <img src="<%= media.contend %>" style="">
+            <p>
+              <span class="glyphicon glyphicon-comment"></span> <%= media.comments.size %>
+              <span class="glyphicon glyphicon-thumbs-up"></span> <%= media.likes.size %>
+            </p>
+          </div>
+        <% end %>
+        <%if media.instance_of? VideoPost %>
+          <div id="pol">
+            <iframe src='https://www.youtube.com/embed/<%= media.contend %>?rel=0&autoplay=<%= params[:autoplay] || 0 %>' frameborder='0' allowfullscreen style=""></iframe>
+            <p>
+              <span class="glyphicon glyphicon-comment"></span> <%= media.comments.size %>
+              <span class="glyphicon glyphicon-thumbs-up"></span> <%= media.likes.size %>
+            </p>
+          </div>
+        <% end %>
+      <% end %>
+    </section>
+  </div>
+</div>

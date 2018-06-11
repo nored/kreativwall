@@ -4,67 +4,57 @@ class WallsController < ApplicationController
   # GET /walls
   # GET /walls.json
   def index
-    @walls = Wall.all
+    # @walls = Wall.all
+    redirect_to "/"
+  end
+
+  def url
+    redirect_to "/#{params[:url]}"
+  end
+
+  def search
+    if @wall.nil?
+      redirect_to "/", notice: 'Wall was not found!'
+    else
+      redirect_to action: "show",:id => wall.id
+    end
   end
 
   # GET /walls/1
   # GET /walls/1.json
   def show
+    if @wall.nil?
+      redirect_to "/", notice: 'Wall was not found!'
+    else
+      session[:url] = @wall.slug
+      pictures = @wall.picture_posts.all
+      videos = @wall.video_posts.all
+      texts = @wall.text_posts.all
+      @media = pictures + videos + texts
+      @media = @media.sort_by(&:created_at)
+      @i = 0
+    end
   end
 
   # GET /walls/new
   def new
-    @wall = Wall.new
+    redirect_to "/"
   end
 
   # GET /walls/1/edit
   def edit
-  end
-
-  # POST /walls
-  # POST /walls.json
-  def create
-    @wall = Wall.new(wall_params)
-
-    respond_to do |format|
-      if @wall.save
-        format.html { redirect_to @wall, notice: 'Wall was successfully created.' }
-        format.json { render :show, status: :created, location: @wall }
-      else
-        format.html { render :new }
-        format.json { render json: @wall.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /walls/1
-  # PATCH/PUT /walls/1.json
-  def update
-    respond_to do |format|
-      if @wall.update(wall_params)
-        format.html { redirect_to @wall, notice: 'Wall was successfully updated.' }
-        format.json { render :show, status: :ok, location: @wall }
-      else
-        format.html { render :edit }
-        format.json { render json: @wall.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /walls/1
-  # DELETE /walls/1.json
-  def destroy
-    @wall.destroy
-    respond_to do |format|
-      format.html { redirect_to walls_url, notice: 'Wall was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to "/#{@wall.slug}"
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_wall
-      @wall = Wall.find(params[:id])
+      session[:url] = params[:url]
+      if params[:id].nil?
+        @wall = Wall.find_by(slug: params[:url])
+      else
+        @wall = Wall.find(params[:id])
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -1,0 +1,32 @@
+<style type="text/css">
+  body {
+    background: url(/bg_min.png) no-repeat center center fixed;
+    background-size: 100% 100%;
+  -moz-background-size: 100% 100%;
+  -webkit-background-size: 100% 100%;
+  -o-background-size: 100% 100%;
+  }
+  </style>
+
+
+<div class="jumbotron">
+  <% if notice.present? %>
+  <div class="alert alert-light">
+    <h4><%= notice %></h4>
+  </div>
+  <% end %>
+  <h1>Welcome</h1>
+  <h2>to an innovative place for sharing media</h2>
+  <%= form_tag("/redirect")  do %>
+    <div class="input-group input-group-lg mb-3">
+      <%= text_field_tag :url, '', :class => 'form-control', placeholder:'Enter wall code...' %>
+      <div class="input-group-append">
+        <%= button_tag "Go!", :class => 'btn btn-lg btn-outline-light' %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="top">
+    <img src="/logo_opt.png" class="logo align-self-center">
+  </div>
+</div>
