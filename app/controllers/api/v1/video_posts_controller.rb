@@ -2,12 +2,11 @@ module Api::V1
   class VideoPostsController < ApplicationController
     before_action :set_video_post, only: [:show, :update, :destroy]
     skip_before_action :verify_authenticity_token
-    before_action :authenticate , except: [:show, :create]
+    before_action :authenticate , except: [:index, :show, :create]
 
     # GET /v1/video_posts
     def index
-      @video_posts = VideoPost.all
-      render json: @video_posts
+      render json: [], status: :unprocessable_entity
     end
 
     # GET /v1/video_posts/1

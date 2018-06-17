@@ -2,12 +2,11 @@ module Api::V1
   class TextPostsController < ApiController
     before_action :set_text_post, only: [:show, :update, :destroy]
     skip_before_action :verify_authenticity_token
-    before_action :authenticate , except: [:show, :create]
+    before_action :authenticate , except: [:index, :show, :create]
 
     # GET /v1/text_posts
     def index
-      @text_posts = TextPost.all
-      render json: @text_posts
+      render json: [], status: :unprocessable_entity
     end
 
     # GET /v1/text_posts/1

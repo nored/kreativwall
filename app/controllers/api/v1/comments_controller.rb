@@ -2,12 +2,11 @@ module Api::V1
   class CommentsController < ApiController
     before_action :set_comment, only: [:show, :update, :destroy]
     skip_before_action :verify_authenticity_token
-    before_action :authenticate , except: [:show, :create]
+    before_action :authenticate , except: [:index, :show, :create]
 
     # GET /v1/comments
     def index
-      @comments = Comment.all
-      render json: @comments
+      render json: [], status: :unprocessable_entity
     end
 
     # GET /v1/comments/1

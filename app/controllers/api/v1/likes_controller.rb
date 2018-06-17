@@ -2,12 +2,11 @@ module Api::V1
   class LikesController < ApplicationController
     before_action :set_like, only: [:show, :update, :destroy]
     skip_before_action :verify_authenticity_token
-    before_action :authenticate , except: [:show, :create]
+    before_action :authenticate , except: [index: :show, :create]
 
     # GET /likes
     def index
-      @likes = Like.all
-      render json: @likes
+      render json: [], status: :unprocessable_entity
     end
 
     # GET /likes/1

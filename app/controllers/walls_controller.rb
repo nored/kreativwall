@@ -31,8 +31,7 @@ class WallsController < ApplicationController
       videos = @wall.video_posts.all
       texts = @wall.text_posts.all
       @media = pictures + videos + texts
-      @media = @media.sort_by(&:created_at)
-      @i = 0
+      @media = @media.sort_by(&:created_at).reverse!
     end
   end
 

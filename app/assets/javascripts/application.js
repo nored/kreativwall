@@ -16,3 +16,6 @@
 //= require cable
 //= require walls
 //= require welcome
+//= require jquery3
+//= require popper
+//= require bootstrap

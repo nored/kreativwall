@@ -2,17 +2,45 @@ module Api::V1
   class WallsController < ApiController
     before_action :set_wall, only: [:show, :edit, :update, :destroy]
     skip_before_action :verify_authenticity_token
-    before_action :authenticate , except: [:show, :create]
+    before_action :authenticate , except: [:index, :show, :create]
 
     # GET /v1/walls
     def index
-      @wall = Wall.all
-      render json: @wall
+      render json: [], status: :unprocessable_entity
     end
 
     # GET /v1/walls/1
     def show
-        render json: @wall
+      if @wall.nil?
+        render json: [], status: :unprocessable_entity
+      else
+        session[:url] = @wall.slug
+        pictures = @wall.picture_posts.all
+        videos = @wall.video_posts.all
+        texts = @wall.text_posts.all
+        media = pictures + videos + texts
+        media = media.sort_by(&:created_at).reverse
+        mediaJson = {}
+        i = 0
+        media.each do |m|
+          mediaJson[i] = {}
+          if m.instance_of? TextPost
+            mediaJson[i][:instance] = "t"
+          end
+          if m.instance_of? PicturePost
+            mediaJson[i][:instance] = "p"
+          end
+          if m.instance_of? VideoPost
+            mediaJson[i][:instance] = "v"
+          end
+          mediaJson[i][:likesize] = m.likes.size
+          mediaJson[i][:commentssize] = m.comments.size
+          mediaJson[i][:content] = m
+          mediaJson[i][:comments] = m.comments
+          i+=1
+        end
+        render json: mediaJson
+      end
     end
 
     # POST /v1/walls
@@ -74,7 +102,7 @@ module Api::V1
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_wall
-        @wall = Wall.find(params[:id])
+        @wall = Wall.find_by(slug: params[:id])
       end
 
       # Never trust parameters from the scary internet, only allow the white list through.

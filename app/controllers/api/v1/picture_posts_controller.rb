@@ -2,12 +2,11 @@ module Api::V1
   class PicturePostsController < ApiController
     before_action :set_picture_post, only: [:show, :update, :destroy]
     skip_before_action :verify_authenticity_token
-    before_action :authenticate , except: [:show, :create]
+    before_action :authenticate , except: [:index, :show, :create]
 
     # GET /v1/picture_posts
     def index
-      @picture_posts = PicturePost.all
-      render json: @picture_posts
+      render json: [], status: :unprocessable_entity
     end
 
     # GET /v1/picture_posts/1
