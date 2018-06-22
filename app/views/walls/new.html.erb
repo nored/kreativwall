@@ -1,1 +1,11 @@
-<h1>Please create new walls in your app</h1>
+<%- model_class = Wall -%>
+<div class="container">
+  <div class="jumbotron">
+    <h2>Create A New <br>Wall?</h2>
+  <div class="form-centered"
+    <div class="page-header">
+      <%t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %>
+    </div>
+    <%= render :partial => 'form' %>
+  </div>
+</div>

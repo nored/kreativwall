@@ -2,7 +2,7 @@ module Api::V1
   class UsersController < ApiController
     before_action :set_user, only: [:show, :update, :destroy]
     skip_before_action :verify_authenticity_token
-    before_action :authenticate, except: [:index, :create]
+    before_action :authenticate, except: [:index, :create, :show]
     # GET /v1/users
     def index
       render json: [], status: :unprocessable_entity
@@ -10,7 +10,9 @@ module Api::V1
 
     # GET /v1/users/1
     def show
-      render json: @user
+      userview = @user
+      userview.api_key = "****"
+      render json: userview
     end
 
     # POST /v1/users

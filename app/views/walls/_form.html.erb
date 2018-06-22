@@ -1,37 +1,40 @@
-<%= form_with(model: wall, local: true) do |form| %>
-  <% if wall.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(wall.errors.count, "error") %> prohibited this wall from being saved:</h2>
-
-      <ul>
-      <% wall.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+<%= form_for @wall, :html => { :class => "wall" } do |f| %>
+  <% if @wall.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@wall.errors.count, "error") %> prohibited this wall from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @wall.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="form-group" disabled>
+    <%= f.label 'Wall URL', :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <input type="text" class="form-control" id="slug" placeholder="<%= "/#{@wall.slug}" %>" disabled>
+      <%= f.hidden_field :slug, :class => 'form-control'%>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :slug %>
-    <%= form.text_field :slug %>
+  <div class="form-group">
+    <%= f.label 'Description', :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :name, :class => 'form-control'%>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :expireDate %>
-    <%= form.datetime_select :expireDate %>
+  <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-10">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                @cancel_wall, :class => 'btn btn-default' %>
+    </div>
   </div>
-
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.number_field :user_id %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+          
 <% end %>

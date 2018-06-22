@@ -1,162 +1,185 @@
-<div class="container">
-  <div id="header">
-    <img src="/logo_sm.png" id="header-img" alt="">
-    <h1><%= @wall.name %></h1>
-  </div>
-  <div id="main">
-    <section id="contend">
-      <% @media.each do |media| %>
-        <%if media.instance_of? TextPost %>
-          <div id="pol" data-toggle="modal" data-target="#<%= "#{media.class}#{media.id}"%>">
-            <p id="text"><%= media.contend %></p>
-            <p>
-              <i class="fa fa-comment"></i> <%= media.comments.size %>
-              <i class="fa fa-heart"></i> <%= media.likes.size %>
-            </p>
+<div id="header">
+  <img src="/logo_sm.png" id="header-img" alt="">
+  <h1><%= @wall.name %></h1>
+</div>
+<div id="container">
+  <% if @users.present? %>
+    <div id="participants" class="participants">
+      <ul class="chat">
+        <% @users.each do |u| %>
+          <%user = User.find(u)%>
+            <li>
+              <span id="avatar-image" class="chat-img pull-left">
+                <img id="participant-image" src="<%= user.picture.nil? ? "/none/none.jpeg" : user.picture %>" alt="User Avatar"/>
+                <strong class="primary-font"><%= "#{user.name} #{user.surname}" %></strong>
+              </span>
+            </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div id="main" class="main">
+      <% if @media.size == 0 %>
+        <div id="qrcode">
+          <div id="table">
+            <%= raw @qrcode.as_html %>
           </div>
-          <!-- The Modal -->
-          <div class="modal fade" id="<%= "#{media.class}#{media.id}"%>">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
+        </div>
+      <% else %>
+      <section id="contend">
+        <% @media.each do |media| %>
+          <%if media.instance_of? TextPost %>
+            <div id="pol" data-toggle="modal" data-target="#<%= "#{media.class}#{media.id}"%>">
+              <p id="text"><%= media.contend %></p>
+              <p>
+                <i class="fa fa-comment"></i> <%= media.comments.size %>
+                <i class="fa fa-heart"></i> <%= media.likes.size %>
+              </p>
+            </div>
+            <!-- The Modal -->
+            <div class="modal fade" id="<%= "#{media.class}#{media.id}"%>">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
 
-                <!-- Modal body -->
-                <div class="modal-body" id="modal-video">
-                  <p id="text"><%= media.contend %></p>
-                  <i class="fa fa-heart"></i> <%= media.likes.size %>
-                  <% if media.comments.size > 0 %>
-                  <hr>
-                  <% end %>
-                  <ul class="chat">
-                    <% for i in 1..media.comments.size do %>
-                      <%comment = media.comments[i-1]%>
-                      <%user = User.find(comment.user_id)%>
-                        <li id="commentbox">
-                          <span id="avatar-image" class="chat-img pull-left">
-                            <img src="<%= user.picture.nil? ? "/none/none.jpeg" : user.picture %>" alt="User Avatar"/>
-                          </span>
-                          <div class="chat-body clearfix">
-                          <div class="header">
-                              <strong class="primary-font"><%= "#{user.name} #{user.surname}" %></strong>
-                          </div>
-                          <p>
-                            <%= "#{comment.body}" %>
-                          </p>
-                          </div>
-                        </li>
+                  <!-- Modal body -->
+                  <div class="modal-body" id="modal-video">
+                    <p id="text"><%= media.contend %></p>
+                    <i class="fa fa-heart"></i> <%= media.likes.size %>
+                    <% if media.comments.size > 0 %>
+                    <hr>
                     <% end %>
-                  </ul>
-                </div>
+                    <ul class="chat">
+                      <% for i in 1..media.comments.size do %>
+                        <%comment = media.comments[i-1]%>
+                        <%user = User.find(comment.user_id)%>
+                          <li id="commentbox">
+                            <span id="avatar-image" class="chat-img pull-left">
+                              <img src="<%= user.picture.nil? ? "/none/none.jpeg" : user.picture %>" alt="User Avatar"/>
+                            </span>
+                            <div class="chat-body clearfix">
+                            <div class="header">
+                                <strong class="primary-font"><%= "#{user.name} #{user.surname}" %></strong>
+                            </div>
+                            <p>
+                              <%= "#{comment.body}" %>
+                            </p>
+                            </div>
+                          </li>
+                      <% end %>
+                    </ul>
+                  </div>
 
+                </div>
               </div>
             </div>
-          </div>
-        <% end %>
-        <%if media.instance_of? PicturePost %>
-          <div id="pol" data-toggle="modal" data-target="#<%= "#{media.class}#{media.id}"%>">
-            <img id="picture-post" src="<%= media.contend %>" style="">
-            <p>
-              <i class="fa fa-comment"></i> <%= media.comments.size %>
-              <i class="fa fa-heart"></i> <%= media.likes.size %>
-            </p>
-          </div>
-          <!-- The Modal -->
-          <div class="modal fade" id="<%= "#{media.class}#{media.id}"%>">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
+          <% end %>
+          <%if media.instance_of? PicturePost %>
+            <div id="pol" data-toggle="modal" data-target="#<%= "#{media.class}#{media.id}"%>">
+              <img id="picture-post" src="<%= media.contend %>" style="">
+              <p>
+                <i class="fa fa-comment"></i> <%= media.comments.size %>
+                <i class="fa fa-heart"></i> <%= media.likes.size %>
+              </p>
+            </div>
+            <!-- The Modal -->
+            <div class="modal fade" id="<%= "#{media.class}#{media.id}"%>">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
 
-                <!-- Modal body -->
-                <div class="modal-body" id="modal-video">
-                  <img id="picture-post" src="<%= media.contend %>" style="">
-                  <i class="fa fa-heart"></i> <%= media.likes.size %>
-                  <% if media.comments.size > 0 %>
-                  <hr>
-                  <% end %>
-                  <ul class="chat">
-                    <% for i in 1..media.comments.size do %>
-                      <%comment = media.comments[i-1]%>
-                      <%user = User.find(comment.user_id)%>
-                        <li id="commentbox">
-                          <span id="avatar-image" class="chat-img pull-left">
-                            <img src="<%= user.picture.nil? ? "/none/none.jpeg" : user.picture %>" alt="User Avatar"/>
-                          </span>
-                          <div class="chat-body clearfix">
-                          <div class="header">
-                              <strong class="primary-font"><%= "#{user.name} #{user.surname}" %></strong>
-                          </div>
-                          <p>
-                            <%= "#{comment.body}" %>
-                          </p>
-                          </div>
-                        </li>
+                  <!-- Modal body -->
+                  <div class="modal-body" id="modal-video">
+                    <img id="picture-post" src="<%= media.contend %>" style="">
+                    <i class="fa fa-heart"></i> <%= media.likes.size %>
+                    <% if media.comments.size > 0 %>
+                    <hr>
                     <% end %>
-                  </ul>
-                </div>
+                    <ul class="chat">
+                      <% for i in 1..media.comments.size do %>
+                        <%comment = media.comments[i-1]%>
+                        <%user = User.find(comment.user_id)%>
+                          <li id="commentbox">
+                            <span id="avatar-image" class="chat-img pull-left">
+                              <img src="<%= user.picture.nil? ? "/none/none.jpeg" : user.picture %>" alt="User Avatar"/>
+                            </span>
+                            <div class="chat-body clearfix">
+                            <div class="header">
+                                <strong class="primary-font"><%= "#{user.name} #{user.surname}" %></strong>
+                            </div>
+                            <p>
+                              <%= "#{comment.body}" %>
+                            </p>
+                            </div>
+                          </li>
+                      <% end %>
+                    </ul>
+                  </div>
 
+                </div>
               </div>
             </div>
-          </div>
-        <% end %>
-        <%if media.instance_of? VideoPost %>
-          <div id="pol" data-toggle="modal" data-target="#<%= "#{media.class}#{media.id}"%>">
-            <iframe src='https://www.youtube.com/embed/<%= media.contend %>?rel=0&autoplay=<%= params[:autoplay] || 0 %>' frameborder='0' allowfullscreen style=""></iframe>
-            <p>
-              <i class="fa fa-comment"></i> <%= media.comments.size %>
-              <i class="fa fa-heart"></i> <%= media.likes.size %>
-            </p>
-          </div>
-          <!-- The Modal -->
-          <div class="modal fade" id="<%= "#{media.class}#{media.id}"%>">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
+          <% end %>
+          <%if media.instance_of? VideoPost %>
+            <div id="pol" data-toggle="modal" data-target="#<%= "#{media.class}#{media.id}"%>">
+              <iframe src='https://www.youtube.com/embed/<%= media.contend %>?rel=0&autoplay=<%= params[:autoplay] || 0 %>' frameborder='0' allowfullscreen style=""></iframe>
+              <p>
+                <i class="fa fa-comment"></i> <%= media.comments.size %>
+                <i class="fa fa-heart"></i> <%= media.likes.size %>
+              </p>
+            </div>
+            <!-- The Modal -->
+            <div class="modal fade" id="<%= "#{media.class}#{media.id}"%>">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
 
-                <!-- Modal body -->
-                <div class="modal-body" id="modal-video">
-                  <iframe src='https://www.youtube.com/embed/<%= media.contend %>?rel=0&autoplay=<%= params[:autoplay] || 0 %>' frameborder='0' allowfullscreen style=""></iframe>
-                  <i class="fa fa-heart"></i> <%= media.likes.size %>
-                  <% if media.comments.size > 0 %>
-                  <hr>
-                  <% end %>
-                  <ul class="chat">
-                    <% for i in 1..media.comments.size do %>
-                      <%comment = media.comments[i-1]%>
-                      <%user = User.find(comment.user_id)%>
-                        <li id="commentbox">
-                          <span id="avatar-image" class="chat-img pull-left">
-                            <img src="<%= user.picture.nil? ? "/none/none.jpeg" : user.picture %>" alt="User Avatar"/>
-                          </span>
-                          <div class="chat-body clearfix">
-                          <div class="header">
-                              <strong class="primary-font"><%= "#{user.name} #{user.surname}" %></strong>
-                          </div>
-                          <p>
-                            <%= "#{comment.body}" %>
-                          </p>
-                          </div>
-                        </li>
+                  <!-- Modal body -->
+                  <div class="modal-body" id="modal-video">
+                    <iframe width="1024" height="800" src='https://www.youtube.com/embed/<%= media.contend %>?rel=0&autoplay=<%= params[:autoplay] || 0 %>' frameborder='0' allowfullscreen style=""></iframe>
+                    <i class="fa fa-heart"></i> <%= media.likes.size %>
+                    <% if media.comments.size > 0 %>
+                    <hr>
                     <% end %>
-                  </ul>
-                </div>
+                    <ul class="chat">
+                      <% for i in 1..media.comments.size do %>
+                        <%comment = media.comments[i-1]%>
+                        <%user = User.find(comment.user_id)%>
+                          <li id="commentbox">
+                            <span id="avatar-image" class="chat-img pull-left">
+                              <img src="<%= user.picture.nil? ? "/none/none.jpeg" : user.picture %>" alt="User Avatar"/>
+                            </span>
+                            <div class="chat-body clearfix">
+                            <div class="header">
+                                <strong class="primary-font"><%= "#{user.name} #{user.surname}" %></strong>
+                            </div>
+                            <p>
+                              <%= "#{comment.body}" %>
+                            </p>
+                            </div>
+                          </li>
+                      <% end %>
+                    </ul>
+                  </div>
 
+                </div>
               </div>
             </div>
-          </div>
+          <% end %>
         <% end %>
-      <% end %>
+      <% end %>  
     </section>
   </div>
 </div>
