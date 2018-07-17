@@ -2,7 +2,7 @@ module Api::V1
   class LikesController < ApplicationController
     before_action :set_like, only: [:show, :update, :destroy]
     skip_before_action :verify_authenticity_token
-    before_action :authenticate , except: [index: :show, :create]
+    before_action :authenticate , except: [:index, :show, :create]
 
     # GET /likes
     def index
@@ -23,7 +23,7 @@ module Api::V1
         @current_user = get_user_by_token
         @like.user_id = @current_user.id
         if @like.save
-          render json: @like, status: :created, location: @like
+          render json: @like, status: :created
         else
           render json: @like.errors, status: :unprocessable_entity
         end

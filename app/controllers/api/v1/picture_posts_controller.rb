@@ -11,7 +11,18 @@ module Api::V1
 
     # GET /v1/picture_posts/1
     def show
-      render json: @picture_post
+      pictureJson = {}
+      pictureJson[:id] = @picture_post.id
+      pictureJson[:content] = {}
+      pictureJson[:content][:url] = "#{request.base_url}#{@picture_post.contend.url}"
+      pictureJson[:content][:thumb] = {}
+      pictureJson[:content][:thumb][:url] = "#{request.base_url}#{@picture_post.contend.thumb.url}"
+      pictureJson[:user_id] = @picture_post.user_id
+      pictureJson[:wall_id] = @picture_post.wall_id
+      pictureJson[:created_at] = @picture_post.created_at
+      pictureJson[:updated_at] = @picture_post.updated_at
+      # render json: @picture_post
+      render json: pictureJson
     end
 
     # POST /v1/picture_posts

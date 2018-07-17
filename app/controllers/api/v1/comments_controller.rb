@@ -11,7 +11,13 @@ module Api::V1
 
     # GET /v1/comments/1
     def show
-      render json: @comment
+      commentJson = {}
+      commentJson[:body] = @comment.body
+      user = User.find(@comment.user_id)
+      commentJson[:username] = "#{user.name} #{user.surname}"
+      commentJson[:picture] = "#{request.base_url}#{user.picture.thumb}"
+      commentJson[:created_at] = @comment.created_at
+      render json: commentJson
     end
 
     # POST /v1/comments
@@ -21,7 +27,7 @@ module Api::V1
       else
         @comment = Comment.new(comment_params)
         @current_user = get_user_by_token
-        @current_user.user_id = @current_user.id
+        @comment.user_id = @current_user.id
         if @comment.save
           render json: @comment, status: :created
         else

@@ -6,40 +6,77 @@ module Api::V1
 
     # GET /v1/walls
     def index
-      render json: [], status: :unprocessable_entity
+      render json: "404", status: :unprocessable_entity
     end
 
     # GET /v1/walls/1
     def show
       if @wall.nil?
-        render json: [], status: :unprocessable_entity
+        render json: "404", status: :unprocessable_entity
       else
         session[:url] = @wall.slug
         pictures = @wall.picture_posts.all
         videos = @wall.video_posts.all
         texts = @wall.text_posts.all
         media = pictures + videos + texts
-        media = media.sort_by(&:created_at).reverse
-        mediaJson = {}
-        i = 0
+        media = media.sort_by(&:created_at)#.reverse
+        mediaJson = []
         media.each do |m|
-          mediaJson[i] = {}
+          medium = {}
+          user = User.find(m.user_id)
           if m.instance_of? TextPost
-            mediaJson[i][:instance] = "t"
+            medium[:instance] = "t"
+            medium[:id] = "t#{m.id}"
           end
           if m.instance_of? PicturePost
-            mediaJson[i][:instance] = "p"
+            medium[:instance] = "p"
+            medium[:id] = "p#{m.id}"
           end
           if m.instance_of? VideoPost
-            mediaJson[i][:instance] = "v"
+            medium[:instance] = "v"
+            medium[:id] = "v#{m.id}"
           end
-          mediaJson[i][:likesize] = m.likes.size
-          mediaJson[i][:commentssize] = m.comments.size
-          mediaJson[i][:content] = m
-          mediaJson[i][:comments] = m.comments
-          i+=1
+          medium[:likesize] = m.likes.size
+          medium[:commentsize] = m.comments.size
+          if m.instance_of? PicturePost
+            medium[:content] = {}
+            medium[:content][:id] = m.id
+            medium[:content][:content] = {}
+            medium[:content][:content][:url] = "#{request.base_url}#{m.contend.url}"
+            medium[:content][:content][:thumb] = {}
+            medium[:content][:content][:thumb][:url] = "#{request.base_url}#{m.contend.thumb.url}"
+            medium[:content][:user_id] = m.user_id
+            medium[:content][:wall_id] = m.wall_id
+            medium[:content][:created_at] = m.created_at
+            medium[:content][:updated_at] = m.updated_at
+          else
+            medium[:content] = {}
+            medium[:content][:id] = m.id
+            medium[:content][:content] = m.contend
+            medium[:content][:user_id] = m.user_id
+            medium[:content][:wall_id] = m.wall_id
+            medium[:content][:created_at] = m.created_at
+            medium[:content][:updated_at] = m.updated_at
+          end
+          medium[:avatar] = "#{request.base_url}#{user.picture.thumb}"
+          medium[:username] = "#{user.name} #{user.surname}"
+          medium[:comments] = []
+          m.comments.each do |c|
+            comment = {}
+            comment[:body] = c.body
+            cUser = User.find(c.user_id)
+            comment[:username] = "#{cUser.name} #{cUser.surname}"
+            comment[:picture] = "#{request.base_url}#{cUser.picture.thumb}"
+            comment[:created_at] = c.created_at
+            medium[:comments] << comment
+          end
+          mediaJson << medium
         end
-        render json: mediaJson
+        wallJson = {}
+        wallJson[:id] = @wall.id
+        wallJson[:name] = @wall.name
+        wallJson[:data] = mediaJson
+        render json: wallJson
       end
     end
 

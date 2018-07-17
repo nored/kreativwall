@@ -10,9 +10,17 @@ module Api::V1
 
     # GET /v1/users/1
     def show
-      userview = @user
-      userview.api_key = "****"
-      render json: userview
+      userJson = {}
+      userJson[:id] = @user.id
+      userJson[:name] = @user.name
+      userJson[:surname] = @user.surname
+      userJson[:picture] = {}
+      userJson[:picture][:url] = "#{request.base_url}#{@user.picture.url}"
+      userJson[:picture][:thumb] = {}
+      userJson[:picture][:thumb][:url] = "#{request.base_url}#{@user.picture.thumb.url}"
+      userJson[:created_at] = @user.created_at
+      userJson[:api_key] = @user.name == "Anonymous" ? @user.api_key : "**********"
+      render json: userJson
     end
 
     # POST /v1/users
